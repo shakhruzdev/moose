@@ -5,12 +5,12 @@ from django.core.paginator import Paginator
 
 
 def index_view(request):
-    posts = Post.objects.filter(is_published=True).order_by("-created_at")
-    return render(request, 'index.html', context={'posts': posts})
+    posts = Post.objects.filter(is_published=True).order_by("-created_at")[:5]
+    return render(request, 'index.html', context={'posts': posts, 'home': 'active'})
 
 
 def about_view(request):
-    return render(request, 'about.html')
+    return render(request, 'about.html', context={'about': 'active'})
 
 
 def contact_view(request):
@@ -33,7 +33,7 @@ def contact_view(request):
             f"""https://api.telegram.org/bot{token}/sendMessage?chat_id=5467422443&text=SHAKHRUZ\nid: {obj.id}\nname: {obj.name}\nphone: {obj.phone}\nemail: {obj.email}\nmessage: {obj.message}""")
 
         return redirect("/contact")
-    return render(request, 'contact.html')
+    return render(request, 'contact.html', context={'contact': 'active'})
 
 
 def blog_view(request):
@@ -48,7 +48,7 @@ def blog_view(request):
 
     page_obj = Paginator(posts, 6)
 
-    return render(request, 'blog.html', context={'posts': page_obj.page(page)})
+    return render(request, 'blog.html', context={'posts': page_obj.page(page), 'articles': 'active'})
 
 
 def blog_single_view(request, pk):
@@ -61,4 +61,4 @@ def blog_single_view(request, pk):
     post = Post.objects.get(id=pk)
     comments = Comment.objects.filter(post_id=pk)
 
-    return render(request, 'blog-single.html', context={'post': post, "comments": comments})
+    return render(request, 'blog-single.html', context={'post': post, "comments": comments, 'articles': 'active'})
